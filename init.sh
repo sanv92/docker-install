@@ -2,7 +2,7 @@
 sudo apt-get update
 
 # 2) CA certificate install
-sudo apt-get install apt-transport-https ca-certificates
+sudo apt-get -y install apt-transport-https ca-certificates
 
 # 3) Add new GPG key
 sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
@@ -21,7 +21,7 @@ echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee $FIL
 sudo apt-get update
 
 # 8) Install Docker
-sudo apt-get install docker-engine
+sudo apt-get -y install docker-engine
 
 # 9) Dockre group
 sudo groupadd docker
