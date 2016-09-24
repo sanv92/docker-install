@@ -25,6 +25,7 @@ sudo apt-get -y install docker-engine
 
 # 9) Dockre group
 sudo groupadd docker
+USER="docker-user"
 sudo usermod -aG docker $USER
 
 # 10)
