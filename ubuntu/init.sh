@@ -26,13 +26,18 @@ sudo apt-get -y install docker-engine
 # 9) add user & password
 useradd udocker
 passwd udocker
+echo udocker | passwd udocker --stdin
 
 # 10) Dockre group
 sudo groupadd docker
 USER="udocker"
 sudo usermod -aG docker $USER
 
-# 11)
+# 11) Create folder
+sudo mkdir /var/www
+sudo chown -R udocker:docker directory
+
+# 12)
 # old # GRUB_CMDLINE_LINUX=""
 # new # GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"
 sudo sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"/g' /etc/default/grub
