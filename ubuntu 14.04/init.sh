@@ -1,3 +1,5 @@
+sudo su
+
 # 1) Update
 sudo apt-get update
 
@@ -45,3 +47,16 @@ sudo sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="cgroup_enable=memory sw
 sudo update-grub
 
 sudo service docker restart
+
+# 13)
+# Adjust memory and swap accounting
+FIND_GRUB=$(grep "cgroup_enable=memory swapaccount=1" /etc/default/grub)
+LENGTH_GRUB=$(echo -n "$FIND_GRUB" | wc -c);
+
+# if else
+if [ FIND_GRUB > 3 ]
+then
+    echo "GRUB_CMDLINE_LINUX -> exist!";
+else
+    echo GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1" >> /etc/default/grub
+fi
