@@ -24,9 +24,9 @@ sudo apt-get update
 sudo apt-get -y install docker-engine
 
 # 9) add user & password
-useradd udocker
-passwd udocker
-echo udocker | passwd udocker --stdin
+sudo useradd udocker
+sudo passwd udocker
+#echo udocker | passwd udocker --stdin
 
 # 10) Dockre group
 sudo groupadd docker
@@ -35,7 +35,8 @@ sudo usermod -aG docker $USER
 
 # 11) Create folder
 sudo mkdir /var/www
-sudo chown -R udocker:docker directory
+sudo chown -R udocker:docker /var/www
+sudo chown -R udocker:docker /vagrant
 
 # 12)
 # old # GRUB_CMDLINE_LINUX=""
