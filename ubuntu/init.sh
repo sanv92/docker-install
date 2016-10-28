@@ -15,7 +15,7 @@ sudo touch /etc/apt/sources.list.d/docker.list
 
 # 6) File write
 FILE="/etc/apt/sources.list.d/docker.list"
-echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee $FILE
+echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee $FILE
 
 # 7) Update
 sudo apt-get update
