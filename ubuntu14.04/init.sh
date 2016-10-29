@@ -3,51 +3,70 @@ sudo su
 # 1) Update
 sudo apt-get update
 echo "1) Update: Done!";
-echo "";
-echo "";
+echo "-";
+echo "-";
 
 # 2) CA certificate install
 sudo apt-get -y install apt-transport-https ca-certificates
 echo "2) CA certificate install Done!";
-echo "";
-echo "";
+echo "-";
+echo "-";
 
 # 3) Add new GPG key
 sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 echo "3) GPG key add: Done!";
-echo "";
-echo "";
+echo "-";
+echo "-";
 
 # 4) Remove file if exist
 sudo rm -R /etc/apt/sources.list.d/docker.list
 echo "4) Remove docker.list: Done!";
-echo "";
-echo "";
+echo "-";
+echo "-";
 
 # 5) Create file
 sudo touch /etc/apt/sources.list.d/docker.list
 echo "5) Create docker.list: Done!";
-echo "";
-echo "";
+echo "-";
+echo "-";
 
 # 6) File write
 FILE="/etc/apt/sources.list.d/docker.list"
-echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee $FILE
+
+FIND_GRUB_16=$(grep "DISTRIB_RELEASE=16.04" /etc/lsb-release);
+FIND_GRUB_14=$(grep "DISTRIB_RELEASE=14.04" /etc/lsb-release);
+FIND_GRUB_12=$(grep "DISTRIB_RELEASE=12.04" /etc/lsb-release);
+LENGTH_GRUB_16=$(echo -n "$FIND_GRUB_16" | wc -c);
+LENGTH_GRUB_14=$(echo -n "$FIND_GRUB_14" | wc -c);
+LENGTH_GRUB_12=$(echo -n "$FIND_GRUB_12" | wc -c);
+
+if [ LENGTH_GRUB_16 > 3 ]; then
+	echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee $FILE
+fi
+
+if [ LENGTH_GRUB_14 > 3 ]; then
+	echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee $FILE
+fi
+
+if [ LENGTH_GRUB_12 > 3 ]; then
+	echo "deb https://apt.dockerproject.org/repo ubuntu-precise main" | sudo tee $FILE
+fi
+
 echo "6) Add repo docker.list: Done!";
-echo "";
-echo "";
+echo "-";
+echo "-";
 
 # 7) Update
 sudo apt-get update
 echo "7) Update: Done!";
-echo "";
-echo "";
+echo "-";
+echo "-";
 
 # 8) Install Docker
 sudo apt-get -y install docker-engine
 echo "8) Install Docker: Done!";
-echo "";
-echo "";
+echo "-";
+echo "-";
 
 # 9) add user & password
 #sudo useradd udocker
@@ -56,15 +75,21 @@ echo "";
 
 # 9) Dockre group
 sudo groupadd docker
-if [ $USER == "vagrant" ]
-then
-    sudo usermod -aG docker vagrant
-else
-    sudo usermod -aG docker $USER
-fi
+sudo gpasswd -a ${USER} docker
+sudo service docker restart
+#if [ $USER == "vagrant" ]
+#then
+#    sudo usermod -aG docker vagrant
+#else
+#    sudo usermod -aG docker $USER
+#fi
+
+#!! for ubuntu 16
+newgrp docker
+
 echo "9) Dockre group: Done!";
-echo "";
-echo "";
+echo "-";
+echo "-";
 
 # 10) Create folder
 sudo mkdir /var/srv
@@ -75,16 +100,16 @@ else
     sudo chown -R $USER:docker /var/srv
 fi
 echo "10) Create folder && USER chown: Done!";
-echo "";
-echo "";
+echo "-";
+echo "-";
 
 # 11)
 # old # GRUB_CMDLINE_LINUX=""
 # new # GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"
 sudo sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"/g' /etc/default/grub
 echo "11) Adjust memory and swap accounting: Done!";
-echo "";
-echo "";
+echo "-";
+echo "-";
 
 # 13)
 # Adjust memory and swap accounting
@@ -106,17 +131,19 @@ curl -L "https://github.com/docker/compose/releases/download/1.8.1/docker-compos
 chmod +x /usr/local/bin/docker-compose
 docker-compose --version
 echo "12) Install Docker Compose: Done!";
-echo "";
-echo "";
+echo "-";
+echo "-";
 
 
 
 
 
 sudo update-grub
-sudo service docker restart
+#sudo service docker restart
+sudo systemctl stop docker
+sudo systemctl start docker
 echo "All Done!";
-echo "";
-echo "";
+echo "-";
+echo "-";
 
 
